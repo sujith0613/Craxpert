@@ -3,7 +3,7 @@
 ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![License](https://img.shields.io/github/license/sujith0613/Craxpert?style=for-the-badge)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 
 **Craxpert** is a robust, concurrent Job Queue Simulator built in **Go (Golang)**. It emphasizes crash recovery and write-ahead logging (WAL) to ensure jobs continue safely after unexpected shutdowns. It provides real-time observability through a beautiful enterprise web dashboard, a terminal monitor, and an HTTP API for job submission and tracking.
 
