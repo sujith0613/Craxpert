@@ -9,7 +9,7 @@
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 * **Concurrent Worker Pool**: Dispatch and process multiple simulated jobs (Emails, SMS, Reports, Webhooks) simultaneously using lightweight goroutines and channels.
 * **Write-Ahead Log (WAL)**: All job state transitions (`PENDING`, `RUNNING`, `SUCCESS`, `FAILED`, `RETRYING`) are instantly serialized to disk before execution, ensuring zero data loss if the server crashes.
@@ -22,7 +22,7 @@
 
 ---
 
-## 🛠️ Architecture
+## Architecture
 
 * **Backend**: Go (`net/http`)
 * **Concurrency**: Native Goroutines, Channels, `sync.RWMutex`
@@ -45,7 +45,7 @@ go-job-simulator/
 
 ---
 
-## 🚦 Getting Started
+## Getting Started
 
 ### Prerequisites
 * Go 1.20+ installed and added to your system `PATH`.
@@ -79,7 +79,7 @@ curl -X POST http://localhost:8080/jobs \
 
 ---
 
-## 🎮 Dashboard Controls
+## Dashboard Controls
 
 * **Reset System**: Completely drops all jobs from memory, deletes the WAL history, and resets the simulator to zero instantly.
 * **Stop/Start Auto-Gen**: Pauses the random job generator so you can observe the queue drain or manually test single injections.
@@ -87,14 +87,14 @@ curl -X POST http://localhost:8080/jobs \
 
 ---
 
-## 🐛 Recent Bug Fixes & Optimizations
+## Recent Bug Fixes & Optimizations
 * Solved `5 / 0` Attempt Glitches by perfectly reconstructing the *latest* state of a job during WAL bootup and defaulting missing `MaxRetry` keys.
 * Prevented memory-crash panics (`concurrent map read and write`) by implementing strict `sync.RWMutex` locking across HTTP Handlers, Workers, and the Reset controllers.
 * Fixed server deadlocks caused by unbuffered channel blocks during massive WAL restores by making worker submissions entirely asynchronous.
 
 ---
 
-## 📸 Demo
+## Demo
 
 **Web Dashboard**  
 ![Craxpert Web Dashboard](images/WebOutput.png)
@@ -104,7 +104,7 @@ curl -X POST http://localhost:8080/jobs \
 
 ---
 
-## 💡 Use Cases
+## Use Cases
 
 * Demonstrates Go concurrency patterns (goroutines, channels).
 * Backend system simulation for portfolios or interviews.
@@ -112,12 +112,12 @@ curl -X POST http://localhost:8080/jobs \
 * Observability via terminal and web dashboard.
 * Database-less WAL-based persistence for fault tolerance.
 
-## 📝 Notes
+## Notes
 
 * Jobs are created both automatically by the Go program and manually via HTTP API.
 * The web dashboard is a live read-only viewer powered by short-polling `/jobs/status`.
 * WAL (`jobs.log`) ensures recovery after crashes or shutdown, while `jobs.tmp` acts as a staging file for memory snapshotting.
 
-## 📄 License
+## License
 
 MIT License
