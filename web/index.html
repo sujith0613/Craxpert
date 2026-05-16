@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Queue — Operations</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --white: #ffffff;
+      --gray-50: #f8f9fa;
+      --gray-100: #f1f3f5;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-400: #ced4da;
+      --gray-500: #adb5bd;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gray-800: #343a40;
+      --gray-900: #212529;
+
+      --pending-ink: #5c6370;
+      --pending-fill: #f0f1f3;
+      --pending-edge: #d0d3d8;
+
+      --running-ink: #1565c0;
+      --running-fill: #e3f0fd;
+      --running-edge: #90c3f5;
+
+      --success-ink: #1b6e35;
+      --success-fill: #e2f5ea;
+      --success-edge: #8fcca6;
+
+      --failed-ink: #b71c1c;
+      --failed-fill: #fdeaea;
+      --failed-edge: #f5a0a0;
+
+      --retrying-ink: #b45309;
+      --retrying-fill: #fef6e7;
+      --retrying-edge: #f5cc80;
+
+      --email-ink: #5b21b6;
+      --email-fill: #ede9fe;
+      --email-edge: #c4b5fd;
+      --sms-ink: #0e7490;
+      --sms-fill: #e0f7fa;
+      --sms-edge: #80deea;
+      --report-ink: #065f46;
+      --report-fill: #d1fae5;
+      --report-edge: #6ee7b7;
+      --webhook-ink: #9d174d;
+      --webhook-fill: #fce7f3;
+      --webhook-edge: #f9a8d4;
+
+      --accent: #1a56db;
+      --accent-hover: #1648c4;
+      --radius-sm: 5px;
+      --radius-md: 8px;
+      --radius-lg: 11px;
+    }
+
+    body {
+      font-family: 'Instrument Sans', system-ui, sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-900);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--white);
+      border-right: 1px solid var(--gray-200);
+      display: flex;
+      flex-direction: column;
+      padding: 0 0 24px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+    }
+
+    .sidebar-logo {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--gray-900);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-mark svg {
+      width: 15px;
+      height: 15px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logo-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-900);
+      letter-spacing: -0.01em;
+    }
+
+    .sidebar-section {
+      padding: 20px 12px 8px;
+    }
+
+    .sidebar-label {
+      font-size: 10.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-500);
+      padding: 0 8px;
+      margin-bottom: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all 0.12s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      text-decoration: none;
+    }
+
+    .nav-item svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      flex-shrink: 0;
+    }
+
+    .nav-item:hover {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    .nav-item.active {
+      background: var(--gray-100);
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+
+    .nav-item.active svg {
+      stroke: var(--accent);
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 0 12px;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: var(--radius-md);
+      background: var(--success-fill);
+      border: 1px solid var(--success-edge);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--success-ink);
+      font-family: 'IBM Plex Mono', monospace;
+      transition: all 0.25s;
+    }
+
+    .status-pill.offline {
+      background: var(--failed-fill);
+      border-color: var(--failed-edge);
+      color: var(--failed-ink);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .status-dot.pulse {
+      animation: blink 1.8s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.3
+      }
+    }
+
+    .main {
+      margin-left: 220px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 32px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+    }
+
+    .breadcrumb-sep {
+      color: var(--gray-400);
+    }
+
+    .breadcrumb-base {
+      color: var(--gray-500);
+      font-weight: 400;
+    }
+
+    .breadcrumb-current {
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Instrument Sans', system-ui, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.13s;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .btn svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      flex-shrink: 0;
+    }
+
+    .btn-default {
+      background: var(--white);
+      color: var(--gray-800);
+      border-color: var(--gray-300);
+    }
+
+    .btn-default:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-400);
+    }
+
+    .btn-danger-soft {
+      background: var(--white);
+      color: var(--failed-ink);
+      border-color: var(--failed-edge);
+    }
+
+    .btn-danger-soft:hover {
+      background: var(--failed-fill);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .divider-v {
+      width: 1px;
+      height: 20px;
+      background: var(--gray-200);
+      margin: 0 2px;
+    }
+
+    .content {
+      padding: 28px 32px 48px;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gray-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 3px;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+    }
+
+    .metric-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--gray-500);
+      margin-bottom: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .metric-val {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--gray-900);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .metric-card[data-type="running"] .metric-val {
+      color: var(--running-ink);
+    }
+
+    .metric-card[data-type="pending"] .metric-val {
+      color: var(--gray-600);
+    }
+
+    .metric-card[data-type="success"] .metric-val {
+      color: var(--success-ink);
+    }
+
+    .metric-card[data-type="failed"] .metric-val {
+      color: var(--failed-ink);
+    }
+
+    .metric-card[data-type="running"] {
+      border-top: 3px solid var(--running-edge);
+    }
+
+    .metric-card[data-type="success"] {
+      border-top: 3px solid var(--success-edge);
+    }
+
+    .metric-card[data-type="failed"] {
+      border-top: 3px solid var(--failed-edge);
+    }
+
+    .metric-card[data-type="pending"] {
+      border-top: 3px solid var(--gray-300);
+    }
+
+    .metric-card[data-type="total"] {
+      border-top: 3px solid var(--gray-400);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--success-ink);
+      background: var(--success-fill);
+      border: 1px solid var(--success-edge);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+
+    .live-badge::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    .table-wrap {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    thead {
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      padding: 10px 20px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-500);
+      font-family: 'IBM Plex Mono', monospace;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 11px 20px;
+      font-size: 13.5px;
+      border-bottom: 1px solid var(--gray-100);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr {
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover {
+      background: var(--gray-50);
+    }
+
+    tbody tr[data-type="email"] {
+      border-left: 3px solid var(--email-edge);
+    }
+
+    tbody tr[data-type="sms"] {
+      border-left: 3px solid var(--sms-edge);
+    }
+
+    tbody tr[data-type="report"] {
+      border-left: 3px solid var(--report-edge);
+    }
+
+    tbody tr[data-type="webhook"] {
+      border-left: 3px solid var(--webhook-edge);
+    }
+
+    .id-cell {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--gray-500);
+    }
+
+    .type-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.02em;
+      border: 1px solid;
+    }
+
+    .type-tag svg {
+      width: 11px;
+      height: 11px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      flex-shrink: 0;
+    }
+
+    .type-tag.email {
+      background: var(--email-fill);
+      color: var(--email-ink);
+      border-color: var(--email-edge);
+    }
+
+    .type-tag.sms {
+      background: var(--sms-fill);
+      color: var(--sms-ink);
+      border-color: var(--sms-edge);
+    }
+
+    .type-tag.report {
+      background: var(--report-fill);
+      color: var(--report-ink);
+      border-color: var(--report-edge);
+    }
+
+    .type-tag.webhook {
+      background: var(--webhook-fill);
+      color: var(--webhook-ink);
+      border-color: var(--webhook-edge);
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 500;
+      font-family: 'IBM Plex Mono', monospace;
+      border: 1px solid;
+    }
+
+    .status-chip::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .status-chip.pending {
+      background: var(--pending-fill);
+      color: var(--pending-ink);
+      border-color: var(--pending-edge);
+    }
+
+    .status-chip.running {
+      background: var(--running-fill);
+      color: var(--running-ink);
+      border-color: var(--running-edge);
+    }
+
+    .status-chip.success {
+      background: var(--success-fill);
+      color: var(--success-ink);
+      border-color: var(--success-edge);
+    }
+
+    .status-chip.failed {
+      background: var(--failed-fill);
+      color: var(--failed-ink);
+      border-color: var(--failed-edge);
+    }
+
+    .status-chip.retrying {
+      background: var(--retrying-fill);
+      color: var(--retrying-ink);
+      border-color: var(--retrying-edge);
+    }
+
+    .status-chip.running::before {
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    .target-cell {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      color: var(--gray-600);
+    }
+
+    .attempt-cell {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .att-0 {
+      color: var(--gray-400);
+    }
+
+    .att-1 {
+      color: var(--retrying-ink);
+      font-weight: 500;
+    }
+
+    .att-2 {
+      color: var(--failed-ink);
+      font-weight: 600;
+    }
+
+    .prog-wrap {
+      width: 52px;
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: 2px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+
+    .att-0 .prog-fill {
+      background: var(--gray-400);
+    }
+
+    .att-1 .prog-fill {
+      background: var(--retrying-ink);
+    }
+
+    .att-2 .prog-fill {
+      background: var(--failed-ink);
+    }
+
+    .empty-row td {
+      padding: 56px 20px;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 13.5px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.06);
+      transform: translateY(8px);
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+    }
+
+    .overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-head {
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .modal-head h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-900);
+      letter-spacing: -0.01em;
+    }
+
+    .modal-head p {
+      font-size: 12.5px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+
+    .modal-body {
+      padding: 20px 22px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 8px 11px;
+      font-size: 13.5px;
+      font-family: 'Instrument Sans', system-ui, sans-serif;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      color: var(--gray-900);
+      transition: border-color 0.13s, box-shadow 0.13s;
+    }
+
+    .field input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+    }
+
+    .modal-foot {
+      padding: 14px 22px;
+      border-top: 1px solid var(--gray-100);
+      background: var(--gray-50);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+        </div>
+        <span class="logo-name">OpsDesk</span>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-label">Workspace</p        <a class="nav-item" href="#" onclick="switchPage(event, 'overview', 'Overview')">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
+          Overview
+        </a>
+        <a class="nav-item active" href="#" onclick="switchPage(event, 'job-queue', 'Job Queue')">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" />
+            <line x1="12" y1="2" x2="12" y2="5" />
+            <line x1="12" y1="19" x2="12" y2="22" />
+            <line x1="2" y1="12" x2="5" y2="12" />
+            <line x1="19" y1="12" x2="22" y2="12" />
+          </svg>
+          Job Queue
+        </a>
+        <a class="nav-item" href="#" onclick="switchPage(event, 'activity', 'Activity Timeline')">
+          <svg viewBox="0 0 24 24">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          Activity
+        </a>
+        <a class="nav-item" href="#" onclick="switchPage(event, 'logs', 'Raw Logs')">
+          <svg viewBox="0 0 24 24">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+            <polyline points="13 2 13 9 20 9" />
+          </svg>
+          Logs
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-label">System</p>
+        <a class="nav-item" href="#" onclick="switchPage(event, 'webhooks', 'Webhooks')">
+          <svg viewBox="0 0 24 24">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg>
+          Webhooks
+        </a>
+        <a class="nav-item" href="#" onclick="switchPage(event, 'settings', 'System Settings')">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0-2.73-.73l.15-.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          Settings
+        </a>a>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="status-pill" id="connection-status">
+          <span class="status-dot pulse"></span>
+          <span id="status-text">System online</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="breadcrumb">
+          <span class="breadcrumb-base">Operations</span>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current">Job Queue</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-default" onclick="toggleAuto()" id="btn-auto">
+            <svg viewBox="0 0 24 24">
+              <rect x="6" y="4" width="4" height="16" />
+              <rect x="14" y="4" width="4" height="16" />
+            </svg>
+            Stop Auto-Gen
+          </button>
+          <button class="btn btn-danger-soft" onclick="resetJobs()">
+            <svg viewBox="0 0 24 24">
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 .49-3.24" />
+            </svg>
+            Reset
+          </button>
+          <div class="divider-v"></div>
+          <button class="btn btn-primary" onclick="openModal()">
+            <svg viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            New Job
+          </button>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- PAGE: JOB QUEUE (Default) -->
+        <div id="page-job-queue" class="page-section">
+        <div class="page-header">
+          <h1 class="page-title">Job Queue</h1>
+          <p class="page-subtitle">Monitor, manage and dispatch jobs across all pipelines.</p>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric-card" data-type="total">
+            <div class="metric-label">Total</div>
+            <div class="metric-val" id="stat-total">0</div>
+          </div>
+          <div class="metric-card" data-type="running">
+            <div class="metric-label">Running</div>
+            <div class="metric-val" id="stat-running">0</div>
+          </div>
+          <div class="metric-card" data-type="pending">
+            <div class="metric-label">Pending</div>
+            <div class="metric-val" id="stat-pending">0</div>
+          </div>
+          <div class="metric-card" data-type="success">
+            <div class="metric-label">Success</div>
+            <div class="metric-val" id="stat-success">0</div>
+          </div>
+          <div class="metric-card" data-type="failed">
+            <div class="metric-label">Failed</div>
+            <div class="metric-val" id="stat-failed">0</div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div class="section-title">
+            All Jobs
+            <span class="live-badge">LIVE</span>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="jobTable">
+            <thead>
+              <tr>
+                <th style="width:100px">Job ID</th>
+                <th style="width:140px">Type</th>
+                <th>Target</th>
+                <th style="width:170px">Attempts</th>
+                <th style="width:130px">Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        </div> <!-- End of Job Queue -->
+
+        <!-- PAGE: OVERVIEW -->
+        <div id="page-overview" class="page-section" style="display:none;">
+          <div class="page-header">
+            <h1 class="page-title">Overview</h1>
+            <p class="page-subtitle">High-level insights of your active processing clusters.</p>
+          </div>
+          <div style="background: var(--white); border: 1px dashed var(--gray-300); border-radius: var(--radius-lg); height: 300px; display: flex; align-items: center; justify-content: center; color: var(--gray-500); font-size: 14px; margin-bottom: 24px;">
+            [ Interactive Cluster Topology Map — Feature coming soon ]
+          </div>
+        </div>
+
+        <!-- PAGE: ACTIVITY -->
+        <div id="page-activity" class="page-section" style="display:none;">
+          <div class="page-header">
+            <h1 class="page-title">Activity Timeline</h1>
+            <p class="page-subtitle">Real-time audit log of job dispatches and resolutions.</p>
+          </div>
+          <div class="table-wrap">
+             <table id="activityTable">
+                <tbody>
+                   <tr class="empty-row"><td colspan="2">No activity detected yet.</td></tr>
+                </tbody>
+             </table>
+          </div>
+        </div>
+
+        <!-- PAGE: LOGS -->
+        <div id="page-logs" class="page-section" style="display:none;">
+          <div class="page-header">
+            <h1 class="page-title">Raw Logs (WAL)</h1>
+            <p class="page-subtitle">Direct access to the Write-Ahead Log (jobs.log).</p>
+          </div>
+          <div style="background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: var(--radius-lg); font-family: 'IBM Plex Mono', monospace; font-size: 12px; height: 500px; overflow-y: auto; white-space: pre-wrap;" id="logOutput">Fetching logs...</div>
+        </div>
+
+        <!-- PAGE: WEBHOOKS -->
+        <div id="page-webhooks" class="page-section" style="display:none;">
+          <div class="page-header">
+            <h1 class="page-title">Webhooks</h1>
+            <p class="page-subtitle">Configure external endpoints to receive payload notifications.</p>
+          </div>
+          <div class="table-wrap" style="padding: 30px; text-align: center;">
+             <p style="color: var(--gray-600); margin-bottom: 16px;">No webhooks configured.</p>
+             <button class="btn btn-default" onclick="alert('Webhook configuration is managed by Terraform.')">+ Add Endpoint</button>
+          </div>
+        </div>
+
+        <!-- PAGE: SETTINGS -->
+        <div id="page-settings" class="page-section" style="display:none;">
+          <div class="page-header">
+            <h1 class="page-title">System Settings</h1>
+            <p class="page-subtitle">Configure simulator parameters and worker pool limits.</p>
+          </div>
+          <div class="table-wrap" style="padding: 30px;">
+             <div class="field" style="max-width: 300px;">
+                <label>Worker Pool Size</label>
+                <input type="number" value="3" disabled>
+                <p style="font-size: 11px; color: var(--gray-500); margin-top: 6px;">Restart the backend to change the pool size.</p>
+             </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="jobModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Create New Job</h2>
+        <p>Fill in the details to dispatch a job to the queue.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>Job ID</label>
+          <input type="number" id="jobId">
+        </div>
+        <div class="field">
+          <label>Type</label>
+          <select id="jobType">
+            <option value="email">Email Notification</option>
+            <option value="sms">SMS Message</option>
+            <option value="report">Report Generation</option>
+            <option value="webhook">Webhook Sync</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Target / Payload</label>
+          <input type="text" id="jobPayload" placeholder="user@example.com">
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-default" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitJob()">Dispatch Job</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const typeIcons = {
+      email: `<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+      sms: `<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+      report: `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+      webhook: `<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`
+    };
+
+    async function fetchJobs() {
+      try {
+        const res = await fetch('/jobs/status');
+        if (!res.ok) throw new Error();
+        const pill = document.getElementById('connection-status');
+        if (pill.classList.contains('offline')) {
+          pill.classList.remove('offline');
+          document.getElementById('status-text').textContent = 'System online';
+          pill.querySelector('.status-dot').classList.add('pulse');
+        }
+        const data = await res.json();
+        const jobs = (data.jobs || []).sort((a, b) => b.id - a.id);
+
+        const btnAuto = document.getElementById('btn-auto');
+        if (data.auto) {
+          btnAuto.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Stop Auto-Gen`;
+        } else {
+          btnAuto.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Auto-Gen`;
+        }
+
+        updateStats(jobs);
+        renderTable(jobs);
+      } catch (e) {
+        const pill = document.getElementById('connection-status');
+        pill.classList.add('offline');
+        document.getElementById('status-text').textContent = 'System offline';
+        pill.querySelector('.status-dot').classList.remove('pulse');
+      }
+    }
+
+    function updateStats(jobs) {
+      document.getElementById('stat-total').textContent = jobs.length;
+      document.getElementById('stat-running').textContent = jobs.filter(j => j.status === 'RUNNING').length;
+      document.getElementById('stat-pending').textContent = jobs.filter(j => j.status === 'PENDING' || j.status === 'RETRYING').length;
+      document.getElementById('stat-success').textContent = jobs.filter(j => j.status === 'SUCCESS').length;
+      document.getElementById('stat-failed').textContent = jobs.filter(j => j.status === 'FAILED').length;
+    }
+
+    function renderTable(jobs) {
+      const tbody = document.querySelector('#jobTable tbody');
+      if (!jobs.length) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="5">No jobs yet — create one or enable Auto-Gen.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = '';
+      jobs.forEach(job => {
+        const tr = document.createElement('tr');
+        const type = (job.type || 'email').toLowerCase();
+        const status = job.status.toLowerCase();
+        const target = job.payload && job.payload.to ? job.payload.to : '—';
+        const pct = Math.round((job.attempts / job.max_retry) * 100);
+
+        let attClass = 'att-0';
+        if (job.attempts === 1) attClass = 'att-1';
+        if (job.attempts >= 2) attClass = 'att-2';
+
+        const icon = typeIcons[type] || typeIcons.email;
+
+        let idColor = 'var(--gray-500)';
+        if (status === 'running') idColor = 'var(--running-ink)';
+        if (status === 'success') idColor = 'var(--success-ink)';
+        if (status === 'failed') idColor = 'var(--failed-ink)';
+        if (status === 'retrying') idColor = 'var(--retrying-ink)';
+
+        tr.setAttribute('data-type', type);
+        tr.innerHTML = `
+        <td class="id-cell" style="color:${idColor}">#${job.id}</td>
+        <td><span class="type-tag ${type}">${icon}${job.type}</span></td>
+        <td class="target-cell">${target}</td>
+        <td><div class="attempt-cell ${attClass}">${job.attempts}&nbsp;/&nbsp;${job.max_retry}<div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div></div></td>
+        <td><span class="status-chip ${status}">${job.status}</span></td>
+      `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function resetJobs() {
+      if (!confirm('Wipe all jobs and reset the simulator?')) return;
+      await fetch('/api/reset', { method: 'POST' });
+      fetchJobs();
+    }
+
+    async function toggleAuto() {
+      await fetch('/api/toggle-auto', { method: 'POST' });
+      fetchJobs();
+    }
+
+    function openModal() {
+      document.getElementById('jobId').value = Math.floor(Math.random() * 90000) + 10000;
+      document.getElementById('jobModal').classList.add('active');
+      setTimeout(() => document.getElementById('jobPayload').focus(), 180);
+    }
+
+    function closeModal() { document.getElementById('jobModal').classList.remove('active'); }
+
+    document.getElementById('jobModal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    async function submitJob() {
+      const id = parseInt(document.getElementById('jobId').value);
+      const type = document.getElementById('jobType').value;
+      const payloadTo = document.getElementById('jobPayload').value;
+      if (!id || !type || !payloadTo) return;
+      const btn = document.querySelector('.modal-foot .btn-primary');
+      btn.textContent = 'Dispatching…';
+      btn.disabled = true;
+      try {
+        const res = await fetch('/jobs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, type, payload: { to: payloadTo }, max_retry: 3 })
+        });
+        if (res.ok) { closeModal(); fetchJobs(); }
+      } catch (e) { console.error(e); }
+      finally { btn.textContent = 'Dispatch Job'; btn.disabled = false; }
+    }
+
+    function switchPage(e, pageId, title) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+
+      document.querySelectorAll('.page-section').forEach(el => el.style.display = 'none');
+      document.getElementById('page-' + pageId).style.display = 'block';
+
+      document.querySelector('.breadcrumb-current').textContent = title;
+      
+      const actions = document.querySelector('.topbar-actions');
+      if (pageId === 'job-queue') {
+         actions.style.display = 'flex';
+      } else {
+         actions.style.display = 'none';
+      }
+
+      if (pageId === 'logs') {
+         fetchLogs();
+      }
+    }
+
+    async function fetchLogs() {
+       try {
+          const res = await fetch('/api/logs');
+          const text = await res.text();
+          document.getElementById('logOutput').textContent = text || 'Log is empty (compacted).';
+       } catch (e) {
+          document.getElementById('logOutput').textContent = 'Error fetching logs: ' + e;
+       }
+    }
+
+    let globalActivity = [];
+    function trackActivity(jobs) {
+       jobs.forEach(job => {
+          if (!globalActivity.find(a => a.id === job.id && a.status === job.status)) {
+             globalActivity.unshift({ id: job.id, status: job.status, type: job.type, time: new Date().toLocaleTimeString() });
+             if (globalActivity.length > 100) globalActivity.pop();
+          }
+       });
+       const tbody = document.querySelector('#activityTable tbody');
+       if (globalActivity.length === 0) return;
+       tbody.innerHTML = '';
+       globalActivity.forEach(a => {
+          const tr = document.createElement('tr');
+          const statusColors = { 'pending': 'var(--gray-500)', 'running': 'var(--running-ink)', 'success': 'var(--success-ink)', 'failed': 'var(--failed-ink)', 'retrying': 'var(--retrying-ink)' };
+          tr.innerHTML = `<td style="padding: 12px 20px; font-size: 13px; color: var(--gray-500); width: 100px;">${a.time}</td>
+                          <td style="padding: 12px 20px; font-size: 13.5px;">Job <strong style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;">#${a.id}</strong> (${a.type}) moved to <span style="color: ${statusColors[a.status.toLowerCase()] || '#000'}; font-weight: 600;">${a.status}</span></td>`;
+          tbody.appendChild(tr);
+       });
+    }
+
+    const originalRenderTable = renderTable;
+    renderTable = function(jobs) {
+       trackActivity(jobs);
+       originalRenderTable(jobs);
+    };
+
+    setInterval(fetchJobs, 1000);
+    fetchJobs();
+  </script>
+</body>
+
+</html>

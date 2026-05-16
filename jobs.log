@@ -1,0 +1,10 @@
+{"id":42,"type":"email","payload":{"to":"user42@example.com"},"status":"RUNNING","attempts":1,"max_retry":3}
+{"id":42,"type":"email","payload":{"to":"user42@example.com"},"status":"RUNNING","attempts":1,"max_retry":3}
+{"id":42,"type":"email","payload":{"to":"user42@example.com"},"status":"SUCCESS","attempts":1,"max_retry":3}
+{"id":43,"type":"sms","payload":{"to":"user43@example.com"},"status":"RUNNING","attempts":1,"max_retry":3}
+{"id":43,"type":"sms","payload":{"to":"user43@example.com"},"status":"RUNNING","attempts":1,"max_retry":3}
+{"id":43,"type":"sms","payload":{"to":"user43@example.com"},"status":"RETRYING","attempts":1,"max_retry":3}
+{"id":44,"type":"report","payload":{"to":"user44@example.com"},"status":"RUNNING","attempts":1,"max_retry":3}
+{"id":44,"type":"report","payload":{"to":"user44@example.com"},"status":"RUNNING","attempts":1,"max_retry":3}
+{"id":43,"type":"sms","payload":{"to":"user43@example.com"},"status":"RUNNING","attempts":2,"max_retry":3}
+{"id":44,"type":"report","payload":{"to":"user44@example.com"},"status":"RETRYING","attempts":1,"max_retry":3}
