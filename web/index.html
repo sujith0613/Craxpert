@@ -229,15 +229,8 @@
     }
 
     @keyframes blink {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: 0.3
-      }
+      0%, 100% { opacity: 1 }
+      50% { opacity: 0.3 }
     }
 
     .main {
@@ -267,19 +260,9 @@
       font-size: 13px;
     }
 
-    .breadcrumb-sep {
-      color: var(--gray-400);
-    }
-
-    .breadcrumb-base {
-      color: var(--gray-500);
-      font-weight: 400;
-    }
-
-    .breadcrumb-current {
-      color: var(--gray-900);
-      font-weight: 600;
-    }
+    .breadcrumb-sep { color: var(--gray-400); }
+    .breadcrumb-base { color: var(--gray-500); font-weight: 400; }
+    .breadcrumb-current { color: var(--gray-900); font-weight: 600; }
 
     .topbar-actions {
       display: flex;
@@ -330,9 +313,7 @@
       border-color: var(--failed-edge);
     }
 
-    .btn-danger-soft:hover {
-      background: var(--failed-fill);
-    }
+    .btn-danger-soft:hover { background: var(--failed-fill); }
 
     .btn-primary {
       background: var(--accent);
@@ -352,13 +333,9 @@
       margin: 0 2px;
     }
 
-    .content {
-      padding: 28px 32px 48px;
-    }
+    .content { padding: 28px 32px 48px; }
 
-    .page-header {
-      margin-bottom: 24px;
-    }
+    .page-header { margin-bottom: 24px; }
 
     .page-title {
       font-size: 20px;
@@ -368,10 +345,7 @@
       margin-bottom: 3px;
     }
 
-    .page-subtitle {
-      font-size: 13px;
-      color: var(--gray-500);
-    }
+    .page-subtitle { font-size: 13px; color: var(--gray-500); }
 
     .metrics-row {
       display: grid;
@@ -405,41 +379,16 @@
       font-family: 'IBM Plex Mono', monospace;
     }
 
-    .metric-card[data-type="running"] .metric-val {
-      color: var(--running-ink);
-    }
+    .metric-card[data-type="running"] .metric-val { color: var(--running-ink); }
+    .metric-card[data-type="pending"] .metric-val { color: var(--gray-600); }
+    .metric-card[data-type="success"] .metric-val { color: var(--success-ink); }
+    .metric-card[data-type="failed"] .metric-val { color: var(--failed-ink); }
 
-    .metric-card[data-type="pending"] .metric-val {
-      color: var(--gray-600);
-    }
-
-    .metric-card[data-type="success"] .metric-val {
-      color: var(--success-ink);
-    }
-
-    .metric-card[data-type="failed"] .metric-val {
-      color: var(--failed-ink);
-    }
-
-    .metric-card[data-type="running"] {
-      border-top: 3px solid var(--running-edge);
-    }
-
-    .metric-card[data-type="success"] {
-      border-top: 3px solid var(--success-edge);
-    }
-
-    .metric-card[data-type="failed"] {
-      border-top: 3px solid var(--failed-edge);
-    }
-
-    .metric-card[data-type="pending"] {
-      border-top: 3px solid var(--gray-300);
-    }
-
-    .metric-card[data-type="total"] {
-      border-top: 3px solid var(--gray-400);
-    }
+    .metric-card[data-type="running"] { border-top: 3px solid var(--running-edge); }
+    .metric-card[data-type="success"] { border-top: 3px solid var(--success-edge); }
+    .metric-card[data-type="failed"] { border-top: 3px solid var(--failed-edge); }
+    .metric-card[data-type="pending"] { border-top: 3px solid var(--gray-300); }
+    .metric-card[data-type="total"] { border-top: 3px solid var(--gray-400); }
 
     .section-header {
       display: flex;
@@ -487,11 +436,7 @@
       overflow: hidden;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
 
     thead {
       background: var(--gray-50);
@@ -516,33 +461,15 @@
       vertical-align: middle;
     }
 
-    tr:last-child td {
-      border-bottom: none;
-    }
+    tr:last-child td { border-bottom: none; }
 
-    tbody tr {
-      transition: background 0.1s;
-    }
+    tbody tr { transition: background 0.1s; }
+    tbody tr:hover { background: var(--gray-50); }
 
-    tbody tr:hover {
-      background: var(--gray-50);
-    }
-
-    tbody tr[data-type="email"] {
-      border-left: 3px solid var(--email-edge);
-    }
-
-    tbody tr[data-type="sms"] {
-      border-left: 3px solid var(--sms-edge);
-    }
-
-    tbody tr[data-type="report"] {
-      border-left: 3px solid var(--report-edge);
-    }
-
-    tbody tr[data-type="webhook"] {
-      border-left: 3px solid var(--webhook-edge);
-    }
+    tbody tr[data-type="email"] { border-left: 3px solid var(--email-edge); }
+    tbody tr[data-type="sms"] { border-left: 3px solid var(--sms-edge); }
+    tbody tr[data-type="report"] { border-left: 3px solid var(--report-edge); }
+    tbody tr[data-type="webhook"] { border-left: 3px solid var(--webhook-edge); }
 
     .id-cell {
       font-family: 'IBM Plex Mono', monospace;
@@ -574,29 +501,10 @@
       flex-shrink: 0;
     }
 
-    .type-tag.email {
-      background: var(--email-fill);
-      color: var(--email-ink);
-      border-color: var(--email-edge);
-    }
-
-    .type-tag.sms {
-      background: var(--sms-fill);
-      color: var(--sms-ink);
-      border-color: var(--sms-edge);
-    }
-
-    .type-tag.report {
-      background: var(--report-fill);
-      color: var(--report-ink);
-      border-color: var(--report-edge);
-    }
-
-    .type-tag.webhook {
-      background: var(--webhook-fill);
-      color: var(--webhook-ink);
-      border-color: var(--webhook-edge);
-    }
+    .type-tag.email { background: var(--email-fill); color: var(--email-ink); border-color: var(--email-edge); }
+    .type-tag.sms { background: var(--sms-fill); color: var(--sms-ink); border-color: var(--sms-edge); }
+    .type-tag.report { background: var(--report-fill); color: var(--report-ink); border-color: var(--report-edge); }
+    .type-tag.webhook { background: var(--webhook-fill); color: var(--webhook-ink); border-color: var(--webhook-edge); }
 
     .status-chip {
       display: inline-flex;
@@ -619,39 +527,12 @@
       flex-shrink: 0;
     }
 
-    .status-chip.pending {
-      background: var(--pending-fill);
-      color: var(--pending-ink);
-      border-color: var(--pending-edge);
-    }
-
-    .status-chip.running {
-      background: var(--running-fill);
-      color: var(--running-ink);
-      border-color: var(--running-edge);
-    }
-
-    .status-chip.success {
-      background: var(--success-fill);
-      color: var(--success-ink);
-      border-color: var(--success-edge);
-    }
-
-    .status-chip.failed {
-      background: var(--failed-fill);
-      color: var(--failed-ink);
-      border-color: var(--failed-edge);
-    }
-
-    .status-chip.retrying {
-      background: var(--retrying-fill);
-      color: var(--retrying-ink);
-      border-color: var(--retrying-edge);
-    }
-
-    .status-chip.running::before {
-      animation: blink 1.2s ease-in-out infinite;
-    }
+    .status-chip.pending { background: var(--pending-fill); color: var(--pending-ink); border-color: var(--pending-edge); }
+    .status-chip.running { background: var(--running-fill); color: var(--running-ink); border-color: var(--running-edge); }
+    .status-chip.success { background: var(--success-fill); color: var(--success-ink); border-color: var(--success-edge); }
+    .status-chip.failed { background: var(--failed-fill); color: var(--failed-ink); border-color: var(--failed-edge); }
+    .status-chip.retrying { background: var(--retrying-fill); color: var(--retrying-ink); border-color: var(--retrying-edge); }
+    .status-chip.running::before { animation: blink 1.2s ease-in-out infinite; }
 
     .target-cell {
       font-family: 'IBM Plex Mono', monospace;
@@ -667,19 +548,9 @@
       gap: 8px;
     }
 
-    .att-0 {
-      color: var(--gray-400);
-    }
-
-    .att-1 {
-      color: var(--retrying-ink);
-      font-weight: 500;
-    }
-
-    .att-2 {
-      color: var(--failed-ink);
-      font-weight: 600;
-    }
+    .att-0 { color: var(--gray-400); }
+    .att-1 { color: var(--retrying-ink); font-weight: 500; }
+    .att-2 { color: var(--failed-ink); font-weight: 600; }
 
     .prog-wrap {
       width: 52px;
@@ -690,23 +561,10 @@
       flex-shrink: 0;
     }
 
-    .prog-fill {
-      height: 100%;
-      border-radius: 2px;
-      transition: width 0.3s;
-    }
-
-    .att-0 .prog-fill {
-      background: var(--gray-400);
-    }
-
-    .att-1 .prog-fill {
-      background: var(--retrying-ink);
-    }
-
-    .att-2 .prog-fill {
-      background: var(--failed-ink);
-    }
+    .prog-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+    .att-0 .prog-fill { background: var(--gray-400); }
+    .att-1 .prog-fill { background: var(--retrying-ink); }
+    .att-2 .prog-fill { background: var(--failed-ink); }
 
     .empty-row td {
       padding: 56px 20px;
@@ -728,10 +586,7 @@
       z-index: 999;
     }
 
-    .overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .overlay.active { opacity: 1; pointer-events: auto; }
 
     .modal {
       background: var(--white);
@@ -739,15 +594,13 @@
       border-radius: var(--radius-lg);
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06);
       transform: translateY(8px);
       transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
       overflow: hidden;
     }
 
-    .overlay.active .modal {
-      transform: translateY(0);
-    }
+    .overlay.active .modal { transform: translateY(0); }
 
     .modal-head {
       padding: 20px 22px 16px;
@@ -767,13 +620,9 @@
       margin-top: 2px;
     }
 
-    .modal-body {
-      padding: 20px 22px;
-    }
+    .modal-body { padding: 20px 22px; }
 
-    .field {
-      margin-bottom: 14px;
-    }
+    .field { margin-bottom: 14px; }
 
     .field label {
       display: block;
@@ -799,15 +648,13 @@
       transition: border-color 0.13s, box-shadow 0.13s;
     }
 
-    .field input::placeholder {
-      color: var(--gray-400);
-    }
+    .field input::placeholder { color: var(--gray-400); }
 
     .field input:focus,
     .field select:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
     }
 
     .modal-foot {
@@ -835,7 +682,8 @@
       </div>
 
       <div class="sidebar-section">
-        <p class="sidebar-label">Workspace</p        <a class="nav-item" href="#" onclick="switchPage(event, 'overview', 'Overview')">
+        <p class="sidebar-label">Workspace</p>
+        <a class="nav-item" href="#" onclick="switchPage(event, 'overview', 'Overview')">
           <svg viewBox="0 0 24 24">
             <rect x="3" y="3" width="7" height="7" />
             <rect x="14" y="3" width="7" height="7" />
@@ -883,12 +731,11 @@
         </a>
         <a class="nav-item" href="#" onclick="switchPage(event, 'settings', 'System Settings')">
           <svg viewBox="0 0 24 24">
-            <path
-              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0-2.73-.73l.15-.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
             <circle cx="12" cy="12" r="3" />
           </svg>
           Settings
-        </a>a>
+        </a>
       </div>
 
       <div class="sidebar-bottom">
@@ -935,56 +782,57 @@
       <div class="content">
         <!-- PAGE: JOB QUEUE (Default) -->
         <div id="page-job-queue" class="page-section">
-        <div class="page-header">
-          <h1 class="page-title">Job Queue</h1>
-          <p class="page-subtitle">Monitor, manage and dispatch jobs across all pipelines.</p>
-        </div>
+          <div class="page-header">
+            <h1 class="page-title">Job Queue</h1>
+            <p class="page-subtitle">Monitor, manage and dispatch jobs across all pipelines.</p>
+          </div>
 
-        <div class="metrics-row">
-          <div class="metric-card" data-type="total">
-            <div class="metric-label">Total</div>
-            <div class="metric-val" id="stat-total">0</div>
+          <div class="metrics-row">
+            <div class="metric-card" data-type="total">
+              <div class="metric-label">Total</div>
+              <div class="metric-val" id="stat-total">0</div>
+            </div>
+            <div class="metric-card" data-type="running">
+              <div class="metric-label">Running</div>
+              <div class="metric-val" id="stat-running">0</div>
+            </div>
+            <div class="metric-card" data-type="pending">
+              <div class="metric-label">Pending</div>
+              <div class="metric-val" id="stat-pending">0</div>
+            </div>
+            <div class="metric-card" data-type="success">
+              <div class="metric-label">Success</div>
+              <div class="metric-val" id="stat-success">0</div>
+            </div>
+            <div class="metric-card" data-type="failed">
+              <div class="metric-label">Failed</div>
+              <div class="metric-val" id="stat-failed">0</div>
+            </div>
           </div>
-          <div class="metric-card" data-type="running">
-            <div class="metric-label">Running</div>
-            <div class="metric-val" id="stat-running">0</div>
-          </div>
-          <div class="metric-card" data-type="pending">
-            <div class="metric-label">Pending</div>
-            <div class="metric-val" id="stat-pending">0</div>
-          </div>
-          <div class="metric-card" data-type="success">
-            <div class="metric-label">Success</div>
-            <div class="metric-val" id="stat-success">0</div>
-          </div>
-          <div class="metric-card" data-type="failed">
-            <div class="metric-label">Failed</div>
-            <div class="metric-val" id="stat-failed">0</div>
-          </div>
-        </div>
 
-        <div class="section-header">
-          <div class="section-title">
-            All Jobs
-            <span class="live-badge">LIVE</span>
+          <div class="section-header">
+            <div class="section-title">
+              All Jobs
+              <span class="live-badge">LIVE</span>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table id="jobTable">
+              <thead>
+                <tr>
+                  <th style="width:100px">Job ID</th>
+                  <th style="width:140px">Type</th>
+                  <th>Target</th>
+                  <th style="width:170px">Attempts</th>
+                  <th style="width:130px">Status</th>
+                  <th style="width:80px">Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
-
-        <div class="table-wrap">
-          <table id="jobTable">
-            <thead>
-              <tr>
-                <th style="width:100px">Job ID</th>
-                <th style="width:140px">Type</th>
-                <th>Target</th>
-                <th style="width:170px">Attempts</th>
-                <th style="width:130px">Status</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        </div> <!-- End of Job Queue -->
 
         <!-- PAGE: OVERVIEW -->
         <div id="page-overview" class="page-section" style="display:none;">
@@ -992,8 +840,9 @@
             <h1 class="page-title">Overview</h1>
             <p class="page-subtitle">High-level insights of your active processing clusters.</p>
           </div>
-          <div style="background: var(--white); border: 1px dashed var(--gray-300); border-radius: var(--radius-lg); height: 300px; display: flex; align-items: center; justify-content: center; color: var(--gray-500); font-size: 14px; margin-bottom: 24px;">
-            [ Interactive Cluster Topology Map — Feature coming soon ]
+          <div class="cluster-map" id="cluster-map" style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 24px; min-height: 300px; display: flex; flex-direction: column; gap: 20px; margin-bottom: 24px;">
+              <div style="font-size: 13px; font-weight: 600; color: var(--gray-700);">Processing Cluster (Pool Size: 3)</div>
+              <div id="worker-nodes" style="display: flex; gap: 16px; flex-wrap: wrap;"></div>
           </div>
         </div>
 
@@ -1004,11 +853,11 @@
             <p class="page-subtitle">Real-time audit log of job dispatches and resolutions.</p>
           </div>
           <div class="table-wrap">
-             <table id="activityTable">
-                <tbody>
-                   <tr class="empty-row"><td colspan="2">No activity detected yet.</td></tr>
-                </tbody>
-             </table>
+            <table id="activityTable">
+              <tbody>
+                <tr class="empty-row"><td colspan="2">No activity detected yet.</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -1028,8 +877,8 @@
             <p class="page-subtitle">Configure external endpoints to receive payload notifications.</p>
           </div>
           <div class="table-wrap" style="padding: 30px; text-align: center;">
-             <p style="color: var(--gray-600); margin-bottom: 16px;">No webhooks configured.</p>
-             <button class="btn btn-default" onclick="alert('Webhook configuration is managed by Terraform.')">+ Add Endpoint</button>
+            <p style="color: var(--gray-600); margin-bottom: 16px;">No webhooks configured.</p>
+            <button class="btn btn-default" onclick="alert('Webhook configuration is managed by Terraform.')">+ Add Endpoint</button>
           </div>
         </div>
 
@@ -1040,11 +889,14 @@
             <p class="page-subtitle">Configure simulator parameters and worker pool limits.</p>
           </div>
           <div class="table-wrap" style="padding: 30px;">
-             <div class="field" style="max-width: 300px;">
-                <label>Worker Pool Size</label>
-                <input type="number" value="3" disabled>
-                <p style="font-size: 11px; color: var(--gray-500); margin-top: 6px;">Restart the backend to change the pool size.</p>
-             </div>
+            <div class="field" style="max-width: 300px;">
+              <label>Worker Pool Size</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="number" id="inputPoolSize" value="3" min="1" max="20">
+                <button class="btn btn-primary" onclick="updatePoolSize()">Apply</button>
+              </div>
+              <p style="font-size: 11px; color: var(--gray-500); margin-top: 6px;">Changes take effect immediately without backend restart.</p>
+            </div>
           </div>
         </div>
 
@@ -1112,7 +964,14 @@
           btnAuto.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Auto-Gen`;
         }
 
+        const currentPoolSize = data.poolSize || 3;
+        if (document.activeElement !== document.getElementById('inputPoolSize')) {
+          document.getElementById('inputPoolSize').value = currentPoolSize;
+        }
+        document.querySelector('#cluster-map > div').textContent = `Processing Cluster (Pool Size: ${currentPoolSize})`;
+
         updateStats(jobs);
+        renderCluster(jobs, currentPoolSize);
         renderTable(jobs);
       } catch (e) {
         const pill = document.getElementById('connection-status');
@@ -1133,7 +992,7 @@
     function renderTable(jobs) {
       const tbody = document.querySelector('#jobTable tbody');
       if (!jobs.length) {
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="5">No jobs yet — create one or enable Auto-Gen.</td></tr>`;
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No jobs yet — create one or enable Auto-Gen.</td></tr>`;
         return;
       }
       tbody.innerHTML = '';
@@ -1156,16 +1015,88 @@
         if (status === 'failed') idColor = 'var(--failed-ink)';
         if (status === 'retrying') idColor = 'var(--retrying-ink)';
 
+        let actionBtn = '—';
+        if (status === 'running') {
+          actionBtn = `<button class="btn btn-danger-soft" style="padding: 4px 8px; font-size: 11px;" onclick="stopJob(${job.id})">Stop</button>`;
+        }
+
         tr.setAttribute('data-type', type);
         tr.innerHTML = `
-        <td class="id-cell" style="color:${idColor}">#${job.id}</td>
-        <td><span class="type-tag ${type}">${icon}${job.type}</span></td>
-        <td class="target-cell">${target}</td>
-        <td><div class="attempt-cell ${attClass}">${job.attempts}&nbsp;/&nbsp;${job.max_retry}<div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div></div></td>
-        <td><span class="status-chip ${status}">${job.status}</span></td>
-      `;
+          <td class="id-cell" style="color:${idColor}">#${job.id}</td>
+          <td><span class="type-tag ${type}">${icon}${job.type}</span></td>
+          <td class="target-cell">${target}</td>
+          <td><div class="attempt-cell ${attClass}">${job.attempts}&nbsp;/&nbsp;${job.max_retry}<div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div></div></td>
+          <td><span class="status-chip ${status}">${job.status}</span></td>
+          <td>${actionBtn}</td>
+        `;
         tbody.appendChild(tr);
       });
+    }
+
+    function renderCluster(jobs, poolSize) {
+      const runningJobs = jobs.filter(j => j.status === 'RUNNING');
+      const nodesContainer = document.getElementById('worker-nodes');
+      nodesContainer.innerHTML = '';
+
+      for (let i = 1; i <= poolSize; i++) {
+        const job = runningJobs[i - 1]; 
+        let nodeHTML = '';
+        if (job) {
+          nodeHTML = `
+            <div style="flex: 1; min-width: 200px; border: 1px solid var(--running-edge); background: var(--running-fill); border-radius: var(--radius-md); padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 12px; font-weight: 600; color: var(--running-ink);">Worker Node ${i}</span>
+                <span class="live-badge" style="background: var(--white); color: var(--running-ink); border-color: var(--running-edge);">BUSY</span>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--running-ink);">
+                Processing Job #${job.id}<br>
+                Type: ${job.type}
+              </div>
+            </div>
+          `;
+        } else {
+          nodeHTML = `
+            <div style="flex: 1; min-width: 200px; border: 1px dashed var(--gray-300); background: var(--gray-50); border-radius: var(--radius-md); padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 12px; font-weight: 600; color: var(--gray-500);">Worker Node ${i}</span>
+                <span style="font-size: 10.5px; font-weight: 600; color: var(--gray-400);">IDLE</span>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--gray-400);">
+                Waiting for jobs...
+              </div>
+            </div>
+          `;
+        }
+        nodesContainer.innerHTML += nodeHTML;
+      }
+    }
+
+    async function stopJob(id) {
+      try {
+        const btn = event.currentTarget;
+        btn.textContent = 'Stopping...';
+        btn.disabled = true;
+        await fetch('/api/jobs/stop', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+        fetchJobs();
+      } catch(e) {
+        console.error(e);
+      }
+    }
+
+    async function updatePoolSize() {
+      const size = parseInt(document.getElementById('inputPoolSize').value);
+      if (size > 0) {
+        await fetch('/api/pool/resize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ size })
+        });
+        fetchJobs();
+      }
     }
 
     async function resetJobs() {
@@ -1211,6 +1142,7 @@
     }
 
     function switchPage(e, pageId, title) {
+      e.preventDefault();
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       e.currentTarget.classList.add('active');
 
@@ -1218,53 +1150,54 @@
       document.getElementById('page-' + pageId).style.display = 'block';
 
       document.querySelector('.breadcrumb-current').textContent = title;
-      
-      const actions = document.querySelector('.topbar-actions');
-      if (pageId === 'job-queue') {
-         actions.style.display = 'flex';
-      } else {
-         actions.style.display = 'none';
-      }
 
-      if (pageId === 'logs') {
-         fetchLogs();
-      }
+      const actions = document.querySelector('.topbar-actions');
+      actions.style.display = pageId === 'job-queue' ? 'flex' : 'none';
+
+      if (pageId === 'logs') fetchLogs();
     }
 
     async function fetchLogs() {
-       try {
-          const res = await fetch('/api/logs');
-          const text = await res.text();
-          document.getElementById('logOutput').textContent = text || 'Log is empty (compacted).';
-       } catch (e) {
-          document.getElementById('logOutput').textContent = 'Error fetching logs: ' + e;
-       }
+      try {
+        const res = await fetch('/api/logs');
+        const text = await res.text();
+        document.getElementById('logOutput').textContent = text || 'Log is empty (compacted).';
+      } catch (e) {
+        document.getElementById('logOutput').textContent = 'Error fetching logs: ' + e;
+      }
     }
 
     let globalActivity = [];
+
     function trackActivity(jobs) {
-       jobs.forEach(job => {
-          if (!globalActivity.find(a => a.id === job.id && a.status === job.status)) {
-             globalActivity.unshift({ id: job.id, status: job.status, type: job.type, time: new Date().toLocaleTimeString() });
-             if (globalActivity.length > 100) globalActivity.pop();
-          }
-       });
-       const tbody = document.querySelector('#activityTable tbody');
-       if (globalActivity.length === 0) return;
-       tbody.innerHTML = '';
-       globalActivity.forEach(a => {
-          const tr = document.createElement('tr');
-          const statusColors = { 'pending': 'var(--gray-500)', 'running': 'var(--running-ink)', 'success': 'var(--success-ink)', 'failed': 'var(--failed-ink)', 'retrying': 'var(--retrying-ink)' };
-          tr.innerHTML = `<td style="padding: 12px 20px; font-size: 13px; color: var(--gray-500); width: 100px;">${a.time}</td>
-                          <td style="padding: 12px 20px; font-size: 13.5px;">Job <strong style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;">#${a.id}</strong> (${a.type}) moved to <span style="color: ${statusColors[a.status.toLowerCase()] || '#000'}; font-weight: 600;">${a.status}</span></td>`;
-          tbody.appendChild(tr);
-       });
+      jobs.forEach(job => {
+        if (!globalActivity.find(a => a.id === job.id && a.status === job.status)) {
+          globalActivity.unshift({ id: job.id, status: job.status, type: job.type, time: new Date().toLocaleTimeString() });
+          if (globalActivity.length > 100) globalActivity.pop();
+        }
+      });
+      const tbody = document.querySelector('#activityTable tbody');
+      if (globalActivity.length === 0) return;
+      tbody.innerHTML = '';
+      globalActivity.forEach(a => {
+        const tr = document.createElement('tr');
+        const statusColors = {
+          'pending': 'var(--gray-500)',
+          'running': 'var(--running-ink)',
+          'success': 'var(--success-ink)',
+          'failed': 'var(--failed-ink)',
+          'retrying': 'var(--retrying-ink)'
+        };
+        tr.innerHTML = `<td style="padding: 12px 20px; font-size: 13px; color: var(--gray-500); width: 100px;">${a.time}</td>
+                        <td style="padding: 12px 20px; font-size: 13.5px;">Job <strong style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;">#${a.id}</strong> (${a.type}) moved to <span style="color: ${statusColors[a.status.toLowerCase()] || '#000'}; font-weight: 600;">${a.status}</span></td>`;
+        tbody.appendChild(tr);
+      });
     }
 
     const originalRenderTable = renderTable;
     renderTable = function(jobs) {
-       trackActivity(jobs);
-       originalRenderTable(jobs);
+      trackActivity(jobs);
+      originalRenderTable(jobs);
     };
 
     setInterval(fetchJobs, 1000);

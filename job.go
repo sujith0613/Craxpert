@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sync"
+	"context"
 )
 
 type JobStatus string
@@ -23,6 +24,7 @@ type Job struct {
 	Status   JobStatus         `json:"status"`
 	Attempts int               `json:"attempts"`
 	MaxRetry int               `json:"max_retry"`
+	Cancel   context.CancelFunc `json:"-"`
 }
 
 func NewJob(id int) *Job {

@@ -40,7 +40,7 @@ func main() {
 			select {
 			case <-ctx.Done():
 				return
-			case <-time.After(time.Duration(3+randInt(3)) * time.Second):
+			case <-time.After(time.Duration(500+randInt(500)) * time.Millisecond):
 				if autoGeneratorActive {
 					job := NewJob(jobID)
 					JobMutex.Lock()
@@ -72,9 +72,11 @@ func main() {
 	// HTTP server
 	http.Handle("/", http.FileServer(http.Dir("./web")))
 	http.HandleFunc("/jobs", handleJobSubmit(pool))
-	http.HandleFunc("/jobs/status", handleJobStatus)
+	http.HandleFunc("/jobs/status", handleJobStatus(pool))
 	http.HandleFunc("/api/reset", handleReset)
 	http.HandleFunc("/api/toggle-auto", handleToggleAuto)
+	http.HandleFunc("/api/jobs/stop", handleJobStop)
+	http.HandleFunc("/api/pool/resize", handlePoolResize(pool, ctx))
 	http.HandleFunc("/api/logs", func(w http.ResponseWriter, r *http.Request) {
 		b, _ := os.ReadFile("jobs.log")
 		w.Header().Set("Content-Type", "text/plain")
@@ -123,21 +125,23 @@ func handleJobSubmit(pool *Pool) http.HandlerFunc {
 	}
 }
 
-func handleJobStatus(w http.ResponseWriter, r *http.Request) {
-	JobMutex.RLock()
-	statuses := make([]*Job, 0, len(jobMap))
-	for _, job := range jobMap {
-		statuses = append(statuses, job)
+func handleJobStatus(pool *Pool) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		JobMutex.RLock()
+		statuses := make([]*Job, 0, len(jobMap))
+		for _, job := range jobMap {
+			statuses = append(statuses, job)
+		}
+		JobMutex.RUnlock()
+		w.Header().Set("Content-Type", "application/json")
+		
+		response := map[string]interface{}{
+			"jobs": statuses,
+			"auto": autoGeneratorActive,
+			"poolSize": pool.Size(),
+		}
+		json.NewEncoder(w).Encode(response)
 	}
-	JobMutex.RUnlock()
-	w.Header().Set("Content-Type", "application/json")
-	
-	// Also pass back auto generator status
-	response := map[string]interface{}{
-		"jobs": statuses,
-		"auto": autoGeneratorActive,
-	}
-	json.NewEncoder(w).Encode(response)
 }
 
 var autoGeneratorActive = true
@@ -153,4 +157,55 @@ func handleReset(w http.ResponseWriter, r *http.Request) {
 func handleToggleAuto(w http.ResponseWriter, r *http.Request) {
 	autoGeneratorActive = !autoGeneratorActive
 	w.WriteHeader(http.StatusOK)
+}
+
+func handleJobStop(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	var req struct {
+		ID int `json:"id"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	JobMutex.RLock()
+	job, ok := jobMap[req.ID]
+	JobMutex.RUnlock()
+
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	JobMutex.Lock()
+	if job.Status == Running && job.Cancel != nil {
+		job.Cancel()
+	}
+	JobMutex.Unlock()
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func handlePoolResize(pool *Pool, ctx context.Context) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+		var req struct {
+			Size int `json:"size"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if req.Size > 0 {
+			pool.Resize(ctx, req.Size)
+		}
+		w.WriteHeader(http.StatusOK)
+	}
 }

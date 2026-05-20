@@ -15,7 +15,10 @@
 * **Write-Ahead Log (WAL)**: All job state transitions (`PENDING`, `RUNNING`, `SUCCESS`, `FAILED`, `RETRYING`) are instantly serialized to disk before execution, ensuring zero data loss if the server crashes.
 * **Checkpointing (Log Compaction)**: Employs a background "Steal/No-Force" compaction worker every 10 seconds to snapshot active jobs and flush them to disk, keeping the WAL tiny and optimized for millisecond startup times.
 * **Enterprise SPA Dashboard**: A stunning, Stripe/Vercel-inspired UI built with pure HTML/CSS/JS. Features include:
-  * **Job Queue**: Live-updating grid with dynamic row gradients.
+  * **Interactive Cluster Map**: Visualizes the active processing cluster, displaying real-time states (BUSY/IDLE) for dynamically scaled worker nodes.
+  * **Job Queue**: Live-updating grid with dynamic row gradients and active controls.
+  * **Dynamic Pool Resizing**: Instantly scale the worker pool up or down directly from the settings page, zero downtime or restart required.
+  * **Job Cancellation**: Forcefully stop active jobs directly from the UI via context cancellation, immediately forcing retry or failure states.
   * **Activity Timeline**: A real-time audit log tracking all state transitions.
   * **Raw Logs View**: Direct access to the `jobs.log` WAL stream straight from the browser.
   * **Live Connection Monitor**: Auto-detects if the backend server goes offline or reboots.
@@ -81,9 +84,11 @@ curl -X POST http://localhost:8080/jobs \
 
 ## Dashboard Controls
 
+* **Dynamic Pool Scaling**: Visit the *Settings* page to input a new worker pool size and click apply. The backend scales goroutines instantly, and the *Overview* visualizer scales UI nodes dynamically.
+* **Stop a Running Job**: Click the *Stop* button on any `RUNNING` job in the *Job Queue* to trigger context cancellation. The backend halts the simulated task and queues it for an immediate retry (or fails it if retries are exhausted).
 * **Reset System**: Completely drops all jobs from memory, deletes the WAL history, and resets the simulator to zero instantly.
-* **Stop/Start Auto-Gen**: Pauses the random job generator so you can observe the queue drain or manually test single injections.
-* **Terminal Monitor**: A console-based table that refreshes every 1.5 seconds, allowing you to observe concurrency directly in your terminal.
+* **Stop/Start Auto-Gen**: Pauses the rapid random job generator so you can observe the queue drain or manually test single injections.
+* **Terminal Monitor**: A console-based table that refreshes periodically, allowing you to observe concurrency directly in your terminal.
 
 ---
 
